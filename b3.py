@@ -1,32 +1,30 @@
-from sklearn.tree import DecisionTreeClassifier
-
-# Training data
-X = [
-    ["Young","High","Yes"],
-    ["Young","Low","Yes"],
-    ["Young","Low","No"],
-    ["Middle","High","Yes"],
-    ["Middle","Low","No"],
-    ["Old","High","Yes"],
-    ["Old","Low","No"],
-    ["Old","Low","Yes"]
-]
-
-y = ["Buy","Buy","Not Buy","Buy","Not Buy","Buy","Not Buy","Not Buy"]
-
-# Convert text to numbers
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.preprocessing import LabelEncoder
-le = LabelEncoder()
 
-X_encoded = []
-for col in zip(*X):
-    X_encoded.append(le.fit_transform(col))
+# Create and encode data
+df = pd.DataFrame({
+    'Age': ['Youth','Youth','Middle','Senior','Senior','Senior','Middle','Youth','Youth','Senior'],
+    'Income': ['High','High','High','Medium','Low','Low','Low','Medium','Low','Medium'],
+    'Weekend': ['No','No','Yes','Yes','Yes','No','Yes','No','Yes','No'],
+    'Buy': ['No','No','Yes','Yes','Yes','No','Yes','No','Yes','Yes']
+})
 
-X_encoded = list(zip(*X_encoded))
+# Encode
+for col in df:
+    df[col] = LabelEncoder().fit_transform(df[col])
 
-model = DecisionTreeClassifier()
-model.fit(X_encoded, y)
+# Train
+X, y = df[['Age','Income','Weekend']], df['Buy']
+model = DecisionTreeClassifier().fit(X, y)
 
-# New data: Middle, Low, Yes
-new = [[1,0,1]]
-print("Prediction:", model.predict(new)[0])
+# Draw tree diagram
+plt.figure(figsize=(12,8))
+plot_tree(model, feature_names=['Age','Income','Weekend'], 
+          class_names=['Not Buy','Buy'], filled=True, rounded=True)
+plt.show()
+
+# Fix: Use DataFrame for prediction to avoid warning
+new_data = pd.DataFrame([[1,2,1]], columns=['Age','Income','Weekend'])
+print('Buy' if model.predict(new_data)[0] == 1 else 'Not Buy')
