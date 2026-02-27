@@ -1,17 +1,28 @@
-import pandas as pd 
-import numpy as np 
-df = pd.DataFrame({ 
-'EmployeeID':[101,102,103,104,105,106,107,108,101,109], 
-'Name':['John','Alice','Bob','Eva','Mark','Sam','Lily','Tom','John','Riya'], 
-'Age':[25,30,22,np.nan,29,35,28,40,25,np.nan], 
-'Salary':[50000,60000,400000,52000,-10000,58000,62000,70000,50000,45000], 
-'Department':['HR','IT','IT','Sales','IT','HR','IT','Sales','HR','IT'] 
-}) 
-df = df.drop_duplicates() 
-df['Age'].fillna(df['Age'].mean(), inplace=True) 
-df = df[df['Salary'] > 0] 
-Q1,Q3 = df['Salary'].quantile([0.25,0.75]) 
-IQR = Q3 - Q1 
-df = df[(df['Salary'] >= Q1-1.5*IQR) & (df['Salary'] <= Q3+1.5*IQR)] 
- 
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    'ID':[1,2,3,4,5,6,7,8,9,10,11],
+    'Name':['Alice','Bob','Charlie','David','Eve','Alice','Frank','Grace','Charlie','Charlie','Charlie'],
+    'Age':[25,29,28,np.nan,32,35,25,100,26,28,28],
+    'Salary':[50000,60000,55000,70000,65000,80000,50000,100000,65000,60000,60000],
+    'Department':['HR','IT','IT','HR','IT','Sales','HR','HR','IT','IT','IT'],
+    'Bonus':[5000,6000,5500,7000,np.nan,8000,5000,10000,6500,5500,6000]
+})
+
+df = df.drop_duplicates()
+
+df['Age'] = df['Age'].fillna(df['Age'].mean())
+df['Bonus'] = df['Bonus'].fillna(df['Bonus'].mean())
+
+Q1, Q3 = df['Age'].quantile([0.25, 0.75])
+IQR = Q3 - Q1
+df = df[df['Age'].between(Q1 - 1.5*IQR, Q3 + 1.5*IQR)]
+
+Q1, Q3 = df['Salary'].quantile([0.25, 0.75])
+IQR = Q3 - Q1
+df = df[df['Salary'].between(Q1 - 1.5*IQR, Q3 + 1.5*IQR)]
+
+df.reset_index(drop=True, inplace=True)
+
 print(df)
