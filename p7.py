@@ -14,9 +14,12 @@ y = ["Woman","Woman","Woman","Woman","Woman",
      "Woman","Woman","Woman","Man","Man",
      "Man","Man","Man","Man","Man"]
 
+# Train model
 model = svm.SVC()
 model.fit(X, y)
 
-pred = model.predict([[167,30]])
+# Predict
+pred = model.predict([[190,28]])
 
-print("Prediction:", "Man" if pred[0]==1 else "Woman")
+print("Prediction:", pred[0])
+
