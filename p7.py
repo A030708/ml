@@ -15,11 +15,10 @@ y = ["Woman","Woman","Woman","Woman","Woman",
      "Man","Man","Man","Man","Man"]
 
 # Train model
-model = svm.SVC()
+model = svm.SVC(kernel='linear')
 model.fit(X, y)
 
 # Predict
-pred = model.predict([[190,28]])
+pred = model.predict([[180,38]])
 
 print("Prediction:", pred[0])
-
